@@ -78,3 +78,87 @@
 b {
     font-weight: bold;
 }
+
+/* Reset & Base Styles */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f2f1; /* Light background similar to Office */
+  }
+  
+  /* Taskpane Container */
+  .taskpane-body-container {
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    border-radius: 4px;
+  }
+  
+  /* Header */
+  .taskpane-body-container h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #0078d7;
+    text-align: center;
+  }
+  
+  /* Selected Cell Container */
+  #selected-cell-container {
+    padding: 10px;
+    border: 1px solid #e1dfdd;
+    border-radius: 4px;
+    background-color: #f3f2f1;
+    margin-bottom: 15px;
+  }
+  
+  #selected-cell-container span {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  /* Log Link Container */
+  #log-link-container {
+    margin-top: 10px;
+  }
+  
+  /* Main Content Area */
+  main#app-body {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Button Styling */
+  .ms-Button {
+    background-color: #0078d7;
+    border: none;
+    color: #ffffff;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .ms-Button:hover,
+  .ms-Button:focus {
+    background-color: #005a9e;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 480px) {
+    .taskpane-body-container,
+    main#app-body {
+      padding: 10px;
+    }
+    .ms-Button {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+  }
+  

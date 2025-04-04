@@ -105,15 +105,16 @@ async function showSelectedCellMetadata() {
     await context.sync();
 
     const sheet = range.worksheet.name;
-    const cell = getAbsoluteCellAddress(range);
     const value = range.values?.[0]?.[0] ?? "(empty)";
 
     // Extract row and column info
-    const col = cell.replace(/[0-9]/g, "");
-    const row = cell.replace(/[A-Z]/gi, "");
+    // Extract row and column info
+    const rowDisplay = range.rowIndex + 1; // gives 29
+    const colDisplay = String.fromCharCode(65 + range.columnIndex); // gives "E"
 
-    document.getElementById("rowNum").textContent = row;
-    document.getElementById("colNum").textContent = col;
+
+    document.getElementById("rowNum").textContent = rowDisplay;
+    document.getElementById("colNum").textContent = colDisplay;
     document.getElementById("currValue").textContent = value;
 
     // Match log entry (optional fuzzy match support later)
@@ -126,12 +127,11 @@ async function showSelectedCellMetadata() {
       const newVal = match["New Value"] ?? "(none)";
       const user = match["User"] ?? "Unknown";
       document.getElementById("log-link-container").innerHTML = `
-        <div class="history-item" style="background-color: #eef3ff; padding: 10px; border-radius: 8px;">
-          <p><b>Previous:</b> ${oldVal}</p>
-          <p><b>New:</b> ${newVal}</p>
+        <div class="history-item">
+          <p><b>Previous:</b> ${newVal}</p>
           <p><b>User:</b> ${user}</p>
           ${note}
-          <button class="ms-Button" onclick="goToLogEntry('${absAddress}', '${sheet}')">
+          <button class="ms-Button" style="margin-top: 10px;" onclick="goToLogEntry('${absAddress}', '${sheet}')">
             Go to Log Entry
           </button>
         </div>
@@ -160,12 +160,20 @@ async function goToLogEntry(cell, sheetName) {
       return;
     }
 
-    const matchIndex = rows.findIndex((row) => row[cellIndex] === cell && row[sheetIndex] === sheetName);
-    if (matchIndex !== -1) {
+    let lastMatchIndex = -1;
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i][cellIndex] === cell && rows[i][sheetIndex] === sheetName) {
+        lastMatchIndex = i;
+      }
+    }
+
+    if (lastMatchIndex !== -1) {
+      // Clear previous highlights
       logSheet.getUsedRange().format.fill.clear();
 
-      const fullRow = logSheet.getRangeByIndexes(matchIndex + 1, 0, 1, headers.length);
-      fullRow.format.fill.color = "#FFF2CC"; // Light yellow
+      // Since rows does not include the header, add 1 to get the correct row index in the worksheet.
+      const fullRow = logSheet.getRangeByIndexes(lastMatchIndex + 1, 0, 1, headers.length);
+      fullRow.format.fill.color = "#FFF2CC"; // Light yellow highlight
       fullRow.select();
 
       await context.sync();
